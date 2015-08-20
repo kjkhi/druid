@@ -18,10 +18,25 @@
 package io.druid.segment.realtime.plumber;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.Period;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
 public class ServerTimeRejectionPolicyFactory implements RejectionPolicyFactory
 {
+  private static DateTimeFormatter bf = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(DateTimeZone.forID("Asia/Shanghai"));
+
+  /**
+   * 把当前系统时间转换为北京时区
+   * @param timeMillis
+   * @return
+   */
+  private long getBeijingTimeMillis(long timeMillis){
+    return DateTime.parse(bf.print(timeMillis), ISODateTimeFormat.dateTime()).getMillis();
+  }
+
   @Override
   public RejectionPolicy create(final Period windowPeriod)
   {
@@ -38,7 +53,9 @@ public class ServerTimeRejectionPolicyFactory implements RejectionPolicyFactory
       @Override
       public boolean accept(long timestamp)
       {
-        long now = System.currentTimeMillis();
+        // 把当前系统时间转换为北京时区
+//        long now = System.currentTimeMillis();
+        long now = getBeijingTimeMillis(System.currentTimeMillis());
 
         boolean notTooOld = timestamp >= (now - windowMillis);
         boolean notTooYoung = timestamp <= (now + windowMillis);
@@ -49,7 +66,7 @@ public class ServerTimeRejectionPolicyFactory implements RejectionPolicyFactory
       @Override
       public String toString()
       {
-        return String.format("serverTime-%s", windowPeriod);
+        return String.format ("serverTime-%s", windowPeriod);
       }
     };
   }

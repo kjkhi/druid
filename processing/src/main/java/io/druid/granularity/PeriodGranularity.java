@@ -47,7 +47,7 @@ public class  PeriodGranularity extends BaseQueryGranularity
     if(origin == null)
     {
       // default to origin in given time zone when aligning multi-period granularities
-      this.origin = new DateTime(0, DateTimeZone.UTC).withZoneRetainFields(chronology.getZone()).getMillis();
+      this.origin = new DateTime(0, DateTimeZone.getDefault()).withZoneRetainFields(chronology.getZone()).getMillis();
       this.hasOrigin = false;
     }
     else

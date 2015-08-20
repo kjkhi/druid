@@ -62,6 +62,7 @@ import io.druid.segment.loading.SegmentLoadingException;
 import io.druid.server.metrics.NoopServiceEmitter;
 import io.druid.timeline.DataSegment;
 import io.druid.timeline.partition.NoneShardSpec;
+import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.junit.Assert;
 import org.junit.Before;
@@ -165,6 +166,8 @@ public class ServerManagerTest
   @Test
   public void testSimpleGet()
   {
+      DateTime dt = new DateTime();
+      System.out.println(dt.getZone());
     Future future = assertQueryable(
         QueryGranularity.DAY,
         "test",

@@ -51,7 +51,7 @@ public class TimeFormatExtractionFn implements ExtractionFn
     this.tz = tz;
     this.locale = localeString == null ? null : Locale.forLanguageTag(localeString);
     this.formatter = DateTimeFormat.forPattern(pattern)
-                                   .withZone(tz == null ? DateTimeZone.UTC : tz)
+                                   .withZone(tz == null ? DateTimeZone.getDefault() : tz)
                                    .withLocale(locale);
   }
 

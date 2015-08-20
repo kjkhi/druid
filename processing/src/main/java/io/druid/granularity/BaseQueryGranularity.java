@@ -33,7 +33,7 @@ public abstract class BaseQueryGranularity extends QueryGranularity
 
   public DateTime toDateTime(long offset)
   {
-    return new DateTime(offset, DateTimeZone.UTC);
+    return new DateTime(offset, DateTimeZone.getDefault());
   }
 
   public Iterable<Long> iterable(final long start, final long end)

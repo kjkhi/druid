@@ -45,7 +45,7 @@ import java.nio.ByteBuffer;
 public abstract class HyperLogLogCollector implements Comparable<HyperLogLogCollector>
 {
   public static final int DENSE_THRESHOLD = 128;
-  public static final int BITS_FOR_BUCKETS = 11;
+  public static final int BITS_FOR_BUCKETS = 14;
   public static final int NUM_BUCKETS = 1 << BITS_FOR_BUCKETS;
   public static final int NUM_BYTES_FOR_BUCKETS = NUM_BUCKETS / 2;
 
@@ -56,7 +56,7 @@ public abstract class HyperLogLogCollector implements Comparable<HyperLogLogColl
   public static final double HIGH_CORRECTION_THRESHOLD = TWO_TO_THE_SIXTY_FOUR / 30.0d;
   public static final double CORRECTION_PARAMETER = ALPHA * NUM_BUCKETS * NUM_BUCKETS;
 
-  private static final int bucketMask = 0x7ff;
+  private static final int bucketMask = 0x3fff;
   private static final int minBytesRequired = 10;
   private static final int bitsPerBucket = 4;
   private static final int range = (int) Math.pow(2, bitsPerBucket) - 1;
@@ -90,8 +90,9 @@ public abstract class HyperLogLogCollector implements Comparable<HyperLogLogColl
 
   public static HyperLogLogCollector makeCollector(ByteBuffer buffer)
   {
-    int remaining = buffer.remaining();
-    return (remaining % 3 == 0 || remaining == 1027) ? new HLLCV0(buffer) : new HLLCV1(buffer);
+//    int remaining = buffer.remaining();
+//    return (remaining % 3 == 0 || remaining == NUM_BYTES_FOR_BUCKETS + 3) ? new HLLCV0(buffer) : new HLLCV1(buffer);
+    return new HLLCV1(buffer);
   }
 
   public static int getLatestNumBytesForDenseStorage()
@@ -650,7 +651,6 @@ public abstract class HyperLogLogCollector implements Comparable<HyperLogLogColl
     if (byteToAdd == 0) {
       return 0;
     }
-
     final byte currVal = storageBuffer.get(position);
 
     final int upperNibble = currVal & 0xf0;

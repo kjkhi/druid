@@ -66,6 +66,10 @@ public class HyperLogLogCollectorTest
 
       HyperLogLogCollector folded = HyperLogLogCollector.makeLatestCollector();
 
+      System.out.println("folded:\t"+folded.toString());
+      System.out.println("oneHalf:\t"+oneHalf.toString());
+      System.out.println("otherHalf:\t"+otherHalf.toString());
+
       folded.fold(oneHalf);
       Assert.assertEquals(oneHalf, folded);
       Assert.assertEquals(oneHalf.estimateCardinality(), folded.estimateCardinality(), 0.0d);
